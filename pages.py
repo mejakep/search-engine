@@ -26,16 +26,16 @@ class ContentParser(HTMLParser): #Class with methods for extracting data from HT
             if not self.tag in self.blacklist:
                 self.content += data + "\n"
 class Page:
-    def __init__(self, url):
+    def __init__(self, url): #Setting up variables
         self.url = url
         self.loaded = False
         self.source = None
         self.content = None
         self.links = None
-    def load(self, force=False, parse_content=True, parse_links=True):
-        if not self.loaded or force:
+    def load(self, force=False, parse_content=True, parse_links=True): #Fetches and process webpage
+        if not self.loaded or force: #Will not load if loaded is True unless force is also True
             self.loaded = True
-            
+
             url = urllib.parse.urlparse(self.url) #Parses url into an object
             if url.scheme == "http": #Use HTTP or HTTPS as appropriate
                 conn = http.client.HTTPConnection(url.netloc)
@@ -47,18 +47,17 @@ class Page:
             response = conn.getresponse()
             self.source = response.read().decode("utf-8", "ignore") #Store source string UTF-8 decoded [BODGE]
 
-            if parse_content:
-                parser = ContentParser()
+            if parse_content: #Runs source code through parser to extract content
+                parser = ContentParser() #Uses methods defined in ContentParser class to detect content
                 parser.feed(self.source)
                 self.content = parser.content
 
-            if parse_links:
-                parser = LinkParser()
+            if parse_links: #Runs source code through parser to extract links
+                parser = LinkParser() #Uses methods defined in LinkParser class to detect <a> tags and extract the URLs from them
                 parser.feed(self.source)
                 absolute_urls = []
-                for relative_url in parser.urls:
+                for relative_url in parser.urls: #Convert all URLs to absolute URLs
                     absolute_url = urllib.parse.urljoin(self.url, relative_url)
                     if urllib.parse.urlparse(absolute_url).scheme in ("http", "https"):
-                        absolute_urls.append(absolute_url)
-                self.links = list(dict.fromkeys(absolute_urls))
-
+                        absolute_urls.append(absolute_url) #Only include http and https URLs i.e. no mailto:// or ftp:// links
+                self.links = list(dict.fromkeys(absolute_urls)) #Remove any duplicate links
