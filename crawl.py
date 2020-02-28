@@ -1,7 +1,6 @@
 import pages
 
-def crawl(self):
-    website = self
+def crawl(website):
     crawled = []
     to_be_crawled = [website]
     while len(crawled) < 10:
