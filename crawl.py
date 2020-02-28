@@ -11,3 +11,4 @@ class Crawl:
             to_be_crawled = list(dict.fromkeys(to_be_crawled))
             crawled.append(start)
             to_be_crawled.pop(0)
+        return (crawled)
