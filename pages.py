@@ -1,6 +1,7 @@
 import http.client #Used to make HTTP requests for a webpage
 from html.parser import HTMLParser #Used to 'parse' the HTML to look for links
 import urllib.parse #Used to parse URL components
+from math import log #Used for the Term-Frequency algorithm
 
 
 class LinkParser(HTMLParser): #Class with a method overwrite to extrace links from <a> tags
@@ -32,6 +33,7 @@ class Page:
         self.source = None
         self.content = None
         self.links = None
+        self.term_frequency = None
     def load(self, force=False, parse_content=True, parse_links=True): #Fetches and process webpage
         if not self.loaded or force: #Will not load if loaded is True unless force is also True
             self.loaded = True
@@ -51,6 +53,14 @@ class Page:
                 parser = ContentParser() #Uses methods defined in ContentParser class to detect content
                 parser.feed(self.source)
                 self.content = parser.content
+
+                terms = self.content.lower().split() #Split the content into a list of all words IN LOWERCASE
+                self.term_frequency = dict.fromkeys(terms, 0) #Creates a key in the term_frequency for each unique term
+                for term in self.term_frequency: #For each term count how many times it appears
+                    self.term_frequency[term] = terms.count(term)
+                for term in self.term_frequency: #Apply log algorithm on each term's frequency
+                    self.term_frequency[term] = log(1 + self.term_frequency[term])
+                
 
             if parse_links: #Runs source code through parser to extract links
                 parser = LinkParser() #Uses methods defined in LinkParser class to detect <a> tags and extract the URLs from them
