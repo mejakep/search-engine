@@ -5,7 +5,7 @@ def crawl(website, depth = 10):
     crawled = []
     to_be_crawled = [website]
     while len(crawled) < depth:
-        x = randint(0, len(to_be_crawled))
+        x = randint(0, (len(to_be_crawled)-1))
         start = pages.Page(to_be_crawled.pop(x))
         start.load()
         to_be_crawled += start.links
