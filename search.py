@@ -1,5 +1,5 @@
 import crawl
-website = crawl.crawl("https://www.wikipedia.org/", 50)
+website = crawl.crawl("https://www.whsb.essex.sch.uk", 10)
 searched = []
 
 def search(term):
@@ -12,4 +12,6 @@ def search(term):
         else:
             x += 1
     searched.sort(key=lambda x: x.term_frequency[term], reverse=True)
-    return (searched)
+    for page in searched:
+        print(page.url)
+    return(searched)
