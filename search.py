@@ -1,5 +1,6 @@
 import crawl
-website = crawl.crawl("https://www.whsb.essex.sch.uk", 10)
+print("Crawling...")
+website = crawl.crawl("https://www.whsb.essex.sch.uk/", 250)
 searched = []
 
 def search(term):
@@ -15,3 +16,8 @@ def search(term):
     for page in searched:
         print(page.url)
     return(searched)
+
+while True:
+    term = input("\n\nSearch term:").lower()
+    print("\t\tresults\n============================================")
+    search(term)
